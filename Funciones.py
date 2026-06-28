@@ -1,6 +1,7 @@
 import subprocess
 import datetime as dt
 import random
+import os
 
 from Archivos import *
 from Inputs import *
@@ -36,9 +37,12 @@ def cargar_json(nombre_archivo:str,lista_alumnos:list) -> bool:
         
         lista_json = leer_json(nombre_archivo)
 
-        #b)Guardar cada diccionario de la lista
-        for i in range(len(lista_json)):
-            lista_alumnos.append(lista_json[i])
+        if lista_json != None:
+
+            for i in range(len(lista_json)):
+                lista_alumnos.append(lista_json[i])
+        else:
+            retorno = False
        
     else:
         retorno = False
@@ -227,114 +231,17 @@ def ingresar_legajo (lista_alumnos: list) -> int:
          legajo = random.randint(100000, 999999)
          return legajo
                 
-
-
-
-
-
-
-
-
-
-def leer_csv_notas_matriz(nombre_archivo:str, matriz_notas: list) -> list:
-
-    """
-    Lee un archivo CSV y construye una matriz de notas.
-
-    Abre el archivo indicado, omite la primera línea (cabecera) y
-    luego procesa cada línea mediante algoritmia, separando los valores
-    por comas sin utilizar funciones propias de strings. Finalmente,
-    convierte los valores a enteros y los almacena en una matriz.
-
-    Args:
-        nombre_archivo (str): Nombre o ruta del archivo CSV a leer.
-        matriz_notas (list): Matriz donde se cargarán las notas
-
-    Returns:
-        list: Matriz de enteros donde cada fila representa un alumno
-              y cada columna corresponde a una nota trimestral.
-    """
-
-
-    if (
-        type(nombre_archivo) == str and 
-        os.path.exists(nombre_archivo) and 
-        type(matriz_notas) == list
-    ):
-        #a)Apertura
-        with open(nombre_archivo,"r",encoding="utf-8") as archivo:
-            archivo.readline()#Falsa lectura
-
-            for linea in archivo:
-                linea = reemplazar_caracteres(linea,"\n","")
-                fila_notas = separar_cadena(linea)
-                normalizar_notas(fila_notas)
-                matriz_notas.append(fila_notas)
-
-        #c)cierre
-        del archivo
-    
-    return matriz_notas        
-
-def separar_cadena(cadena:str,separador:str = ",") -> list:
-
-    """
-    Separa una cadena en una lista de valores utilizando un separador.
-
-    Recorre la cadena carácter por carácter y construye manualmente
-    una lista de subcadenas cada vez que encuentra el separador,
-    sin utilizar métodos de strings como split().
-
-    Args:
-        cadena (str): Cadena a separar.
-        separador (str): Carácter que actúa como separador (por defecto ',').
-
-    Returns:
-        list: Lista de cadenas separadas.
-    """
-
-    lista_separada = []
-    cadena_nueva = ""
-    if type(cadena) == str and (type(separador) == str and len(separador) == 1):
-        for i in range(len(cadena)):
-            if cadena[i] == separador:
-                lista_separada.append(cadena_nueva)
-                cadena_nueva = ""
-            else:
-                cadena_nueva += cadena[i]
-        lista_separada.append(cadena_nueva)
-    
-    return lista_separada
-
-def calcular_porcentaje(cantidad_parcial: int, total: int, 
-                        mensaje_error: str = "❌ División por 0") -> float:
-    """
-    Calcula porcentaje del valor parcial en referencia con el valor total indicado.
-
-    Args:
-        votos (int): Cantidad parcial a saber e porcentaje.
-        total (int): Valor Total.
-        mensaje_error (str): Mensaje a mostrar si el total es cero.
-
-    Returns:
-        float: Porcentaje calculado o None si no es posible realizar la división.
-    """
-    if total == 0:
-        print(mensaje_error)
-    else:
-        return cantidad_parcial / total * 100
-    
-def calcular_promedio(total: int, cantidad_elementos: int,
+def calcular_promedio(suma_total: int | float, cantidad_elementos: int,
                       mensaje_error: str = "❌ División por 0") -> float:
     
     """
-    Calcula el promedio a partir de un total y una cantidad de elementos.
+    Calcula el promedio a partir de una suma total y una cantidad de elementos.
 
     Verifica que la cantidad sea distinta de cero para evitar errores
     de división. En caso contrario, muestra un mensaje de error.
 
     Args:
-        total (int): Suma total de los valores.
+        suma_total (int | float): Suma total de los valores.
         cantidad (int): Cantidad de elementos utilizados para el cálculo.
         mensaje_error (str): Mensaje a mostrar si la cantidad es cero.
 
@@ -345,86 +252,68 @@ def calcular_promedio(total: int, cantidad_elementos: int,
     if cantidad_elementos == 0:
         print(mensaje_error)
     else:
-        return  total/ cantidad_elementos
+        return  suma_total/ cantidad_elementos
 
-def guardar_csv_matriz(nombre_archivo: str, matriz: list, 
-                       cabecera: str = "1° Trimestre,2° Trimestre,3° Trimestre") -> bool:
+def intercambiar_valores(vector:list,izq:int,der:int) -> None:
 
-    
     """
-    Guarda una matriz de notas en un archivo CSV.
-
-    Crea o sobrescribe un archivo con el nombre indicado, escribe una
-    cabecera y luego guarda cada fila de la matriz como una línea en
-    formato CSV, separando los valores por comas.
+    Intercambia dos elementos de una lista.
+    Realiza el intercambio de posiciones entre dos elementos
+    especificados por sus índices.
 
     Args:
-        nombre_archivo (str): Nombre o ruta del archivo CSV a crear.
-        matriz (list): Matriz donde cada fila representa las notas de un alumno.
-        cabecera (str): Línea inicial del archivo que describe las columnas.
+    vector (list): Lista donde se realizará el intercambio.
+    izq (int): Índice del primer elemento.
+    der (int): Índice del segundo elemento.
 
     Returns:
-        bool: True si la operación se realizó correctamente, False en caso contrario.
+    None
+    """
+    aux_izq = vector[izq]
+    vector[izq] = vector[der]
+    vector[der] = aux_izq
+
+def ordenar_alumno_clave(lista_alumnos:list, clave:str ,criterio: bool = True) -> bool:
+
+    """
+    Ordena una lista de alumnos según una clave.
+    Aplica un algoritmo de ordenamiento comparando el valor de una
+    clave en cada diccionario. Permite ordenar de forma ascendente
+    o descendente según el criterio.
+
+    Args:
+    lista_alumnos (list): Lista de diccionarios de alumnos.
+    clave (str): Clave por la cual ordenar.
+    criterio (bool): False para ascendente, True para descendente.
+
+    Returns:
+    bool: True si se ordenó correctamente, False en caso contrario.
     """
 
-
-    if type(nombre_archivo) == str and type(cabecera) == str and type(matriz) == list:
+    if type(lista_alumnos) == list and type(clave) == str:
         retorno = True
-        with open(nombre_archivo,"w",encoding="utf-8") as archivo:
-
-            archivo.write(cabecera + "\n")
-
-            for fil in range(len(matriz)):
-                linea = unir_cadena(matriz[fil])
-                if fil == len(matriz) - 1:
-                    archivo.write(linea)
-                else:
-                    archivo.write(linea + "\n")
-
-        del archivo
+        for izq in range(len(lista_alumnos) - 1):
+            for der in range((izq + 1),len(lista_alumnos)):
+                if (
+                    criterio == False and (lista_alumnos[izq].get(clave) > lista_alumnos[der].get(clave)) or 
+                    criterio == True and (lista_alumnos[izq].get(clave) < lista_alumnos[der].get(clave))
+                ):
+                    intercambiar_valores(lista_alumnos,izq,der)
     else:
         retorno = False
 
     return retorno
 
-def unir_cadena(lista:list, separador:str = ",") -> str:
-    """
-    Une los elementos de una lista en una cadena separada por un carácter.
 
-    Recorre la lista y construye manualmente una cadena donde los valores
-    están separados por el carácter indicado, sin utilizar métodos de string.
 
-    Args:
-        lista (list): Lista de valores a unir.
-        separador (str): Carácter separador (por defecto ',')
 
-    Returns:
-        str: Cadena formada por los elementos de la lista separados por el separador.
-    """
-
-    cadena_nueva = ""
     
-    for i in range(len(lista)):
-        if i == len(lista) - 1:
-            cadena_nueva += f"{lista[i]}"
-        else:
-            cadena_nueva += f"{lista[i]}{separador}"
-        
-    return cadena_nueva
 
-def nombre_archivo_csv()-> str:
-    """
-    Genera un nombre de archivo CSV con la fecha actual.
 
-    Obtiene la fecha del sistema, la formatea en formato día-mes-año
-    y la utiliza para construir el nombre del archivo.
 
-    Returns:
-        str: Nombre del archivo en formato 'dd-mm-aaaa.csv'.
-    """
 
-    fecha_actual = dt.date.today()
-    fecha_formateada = fecha_actual.strftime("%d-%m-%Y")
-    nombre_archivo = fecha_formateada + ".csv"
 
-    return nombre_archivo
+
+
+
+

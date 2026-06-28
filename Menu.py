@@ -43,21 +43,19 @@ def mostrar_menu()-> None:
                     esperar_enter()
                 case 3:
                     limpiar_consola()
-                    mostrar_alumnos_nota_menor_a(matriz_notas,4)
+                    mostrar_egresos_menor_2000(lista_alumnos)
                     esperar_enter()
                 case 4:
                     limpiar_consola()
-                    mostrar_porcentaje(matriz_notas)
+                    buscar_alumno_avanzado(lista_alumnos)
                     esperar_enter()  
                 case 5:
                     limpiar_consola()
-                    mostrar_mejor_trimestre(matriz_notas)
+                    mostrar_alumnos_por_promedio(lista_alumnos)
                     esperar_enter()
-
                 case 6:
-                    # Consultar si se realizo carga manual
-                    # if carga_manual == True:
-                        # guardar_csv_matriz(nombre_archivo_csv(),matriz_notas)
+                    if carga_manual == True:
+                        sobreescribir_json(lista_alumnos)
                     print("Hasta luego!! ✌️")
                 case _:
                     print("❌  Opción Inválida. Vuelva a intentarlo")
@@ -85,6 +83,7 @@ def sub_menu_carga(lista_alumnos: list)-> bool:
                     limpiar_consola()
                     print("📂  *** CARGA DESDE ARCHIVO JSON*** 📂")
                     cargar_json("alumnos.json",lista_alumnos)
+                    #normalizar_alumnos(lista_alumnos)
                     mostrar_lista_diccionarios(lista_alumnos)
                 
                     carga_manual = False
@@ -92,7 +91,7 @@ def sub_menu_carga(lista_alumnos: list)-> bool:
 
                 case 2:
                     limpiar_consola()
-                    print("📝  *** CARGA MANUSL*** 📝")
+                    print("📝  *** CARGA MANUAL*** 📝")
                     cargar_alumno(lista_alumnos)
                     mostrar_lista_diccionarios(lista_alumnos)
                     carga_manual = True

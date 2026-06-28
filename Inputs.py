@@ -1,3 +1,6 @@
+from Archivos import *
+
+
 
 def ingresar_numero(mensaje: str, 
                     mensaje_error: str = "❌ Error. Los datos ingresados no son válidos.") -> int | float:
@@ -123,6 +126,7 @@ def validar_cadena_string(cadena: str) -> bool:
 
     if len(cadena) > 0:
         retorno = True
+
         for i in range(len(cadena)):
             caracter = cadena[i]
             caracter_ascii = ord(caracter)
@@ -133,6 +137,17 @@ def validar_cadena_string(cadena: str) -> bool:
                 ):
                 retorno = False
                 break
+        
+        solo_espacios = True
+        
+        for j in range(len(cadena)):
+            if cadena[j] != " ":
+                solo_espacios = False
+                break
+       
+        if solo_espacios:
+            retorno = False
+
     else:
         retorno = False
 
@@ -190,8 +205,7 @@ def validar_plan(mensaje: str = "Plan: ", mensaje_error: str= "❌ Error. Debe s
             else:
                 return numero 
     
-
-def confirmar_carga_alumno(mensaje: str = "¿Esta seguro de cargar este alumno? (si/no): ",
+def confirmar_carga_alumno(mensaje: str = "¿Está seguro de cargar este alumno? (si/no): ",
                            mensaje_error: str = "❌ Error. Responda Si o No") -> bool:
 
     """
@@ -210,10 +224,49 @@ def confirmar_carga_alumno(mensaje: str = "¿Esta seguro de cargar este alumno? 
     while True:
         respuesta = input(mensaje)
         if respuesta == "si" or respuesta == "SI":
+            print("")
             print("✅ CARGADO CON EXITO!")
             return True
         elif respuesta == "no" or respuesta == "NO":
+            print("")
             print("❌ CARGA CANCELADA!")
             return False
+        print(mensaje_error)
+
+def sobreescribir_json(lista_alumnos: list,
+                       mensaje: str = "¿Desea guardar los cambios en el archivo JSON? (si/no): ",
+                       mensaje_error: str = "❌ Error. Responda Si o No") -> bool:
+
+    """
+    Solicita confirmación para guardar los datos en un archivo JSON.
+
+    Pregunta al usuario si desea guardar los cambios realizados
+    en la lista de alumnos. En caso afirmativo, sobrescribe el
+    archivo JSON con los nuevos datos.
+
+    Args:
+        lista_alumnos (list): Lista de diccionarios con los alumnos.
+        mensaje (str): Texto para solicitar confirmación.
+        mensaje_error (str): Mensaje a mostrar en caso de error.
+
+    Returns:
+        bool: True si se guardaron los datos, False si se canceló la operación.
+    """
+
+    while True:
+        respuesta = input(mensaje)
+
+        if respuesta == "si" or respuesta == "SI":
+            guardar_json("alumnos_copia.json", lista_alumnos)
+            #guardar_json("alumnos.json", lista_alumnos) Sobreescribe realmente
+            print("")
+            print("✅ CARGADO CON EXITO!")
+            return True
+        
+        elif respuesta == "no" or respuesta == "NO":
+            print("")
+            print("❌ CARGA CANCELADA!")
+            return False
+        
         print(mensaje_error)
 
