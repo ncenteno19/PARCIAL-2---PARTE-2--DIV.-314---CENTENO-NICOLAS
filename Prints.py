@@ -1,5 +1,67 @@
 from Funciones import *
 
+
+
+def mostrar_diccionario(diccionario:dict) -> None:
+    """
+    Muestra en pantalla las claves y valores de un diccionario.
+    Args:
+    diccionario (dict): Diccionario a mostrar.
+    Returns:
+    None
+    """
+
+    
+    for clave in diccionario:
+        print(f"{formatear_clave(clave)} : {diccionario[clave]}")
+    print("────────────────────────────────")
+
+def mostrar_lista_diccionarios(lista_diccionarios:list) -> None:
+    """
+    Muestra en pantalla las claves y valores de un diccionario.
+    Args:
+    diccionario (dict): Diccionario a mostrar.
+    Returns:
+    None
+    """
+    print("────────────────────────────────")
+    for i in range(len(lista_diccionarios)):
+        mostrar_diccionario(lista_diccionarios[i])
+        
+
+def mostrar_egresados_por_plan(lista_alumnos: list, mensaje: str = "Ingrese el Plan a buscar: ",
+                               mensaje_error: str = "❌ No se encontraron alumnos") -> None:
+    
+    print("***  EGRESADOS POR PLAN ***\n")
+
+    print("────────────────────────────────")
+    
+    plan = validar_plan(mensaje)
+    print("")
+
+    hay_alumno = False
+
+    for i in range (len(lista_alumnos)):
+        if lista_alumnos[i]["plan"] == plan:
+            hay_alumno = True
+            mostrar_diccionario(lista_alumnos[i])
+    
+    if hay_alumno == False:
+        print(mensaje_error)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def mostrar_matriz(matriz:list) -> None: 
     """
     Muestra en pantalla una matriz.

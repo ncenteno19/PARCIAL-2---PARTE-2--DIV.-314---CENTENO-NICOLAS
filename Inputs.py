@@ -110,15 +110,15 @@ def ingresar_nombre(mensaje: str,
 def validar_cadena_string(cadena: str) -> bool:
     
     """
-    Verifica que una cadena contenga solo letras.
+    Verifica que una cadena contenga solo letras y espacios.
     Recorre la cadena carácter por carácter y valida que todos
-    los caracteres sean letras (mayúsculas o minúsculas) utilizando ASCII.
+    los caracteres sean letras (mayúsculas o minúsculas) o espacios, utilizando ASCII.
 
     Args:
     cadena (str): Cadena a validar.
 
     Returns:
-    bool: True si la cadena contiene solo letras, False en caso contrario.
+    bool: True si la cadena contiene solo letras y espacios, False en caso contrario.
     """
 
     if len(cadena) > 0:
@@ -127,8 +127,9 @@ def validar_cadena_string(cadena: str) -> bool:
             caracter = cadena[i]
             caracter_ascii = ord(caracter)
             if not (
-                (caracter_ascii >= 65 and caracter_ascii <= 90)or
-                (caracter_ascii >= 97 and caracter_ascii <= 122)
+                (caracter_ascii >= 65 and caracter_ascii <= 90) or
+                (caracter_ascii >= 97 and caracter_ascii <= 122) or
+                (caracter_ascii == 32)
                 ):
                 retorno = False
                 break
@@ -190,5 +191,29 @@ def validar_plan(mensaje: str = "Plan: ", mensaje_error: str= "❌ Error. Debe s
                 return numero 
     
 
+def confirmar_carga_alumno(mensaje: str = "¿Esta seguro de cargar este alumno? (si/no): ",
+                           mensaje_error: str = "❌ Error. Responda Si o No") -> bool:
 
+    """
+    Solicita confirmación al usuario para cargar un alumno.
+    Pide una respuesta por teclado y valida que sea "si" o "no".
+    En función de la respuesta, confirma o cancela la carga.
+
+    Args:
+    mensaje (str): Texto mostrado para solicitar confirmación.
+    mensaje_error (str): Mensaje a mostrar si la respuesta es inválida.
+
+    Returns:
+    bool: True si el usuario confirma, False si cancela la operación.
+    """
+
+    while True:
+        respuesta = input(mensaje)
+        if respuesta == "si" or respuesta == "SI":
+            print("✅ CARGADO CON EXITO!")
+            return True
+        elif respuesta == "no" or respuesta == "NO":
+            print("❌ CARGA CANCELADA!")
+            return False
+        print(mensaje_error)
 

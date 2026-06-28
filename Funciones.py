@@ -1,9 +1,8 @@
 import subprocess
-import os
 import datetime as dt
-import json
 import random
 
+from Archivos import *
 from Inputs import *
 
 def limpiar_consola():
@@ -45,74 +44,6 @@ def cargar_json(nombre_archivo:str,lista_alumnos:list) -> bool:
         retorno = False
 
     return retorno
-
-def leer_json(nombre_archivo:str) -> any | None:
-
-    """
-    Lee un archivo JSON y devuelve su contenido.
-    Abre el archivo y deserializa su contenido a una estructura de datos.
-    Args:
-    nombre_archivo (str): Nombre o ruta del archivo JSON.
-    Returns:
-    any | None: Datos leídos del archivo o None si ocurre un error.
-    """
-    if type(nombre_archivo) == str and os.path.exists(nombre_archivo):
-        
-        with open(nombre_archivo,"r") as archivo:
-            retorno = json.load(archivo)
-        del archivo
-    else:
-        retorno = None
-    
-    return retorno
-
-def guardar_json(nombre_archivo:str,objeto_guardar:any) -> bool:
-    
-    """
-    Guarda un objeto en un archivo JSON.
-    Serializa el objeto recibido y lo escribe en el archivo indicado.
-    Args:
-    nombre_archivo (str): Nombre o ruta del archivo JSON.
-    objeto_guardar (any): Datos a guardar.
-    Returns:
-    bool: True si se guardó correctamente, False en caso contrario.
-    """
-
-    if type(nombre_archivo) == str:
-        with open(nombre_archivo,"w") as archivo:
-            json.dump(objeto_guardar,archivo,indent=4)
-        del archivo
-
-        retorno = True
-    else:
-        retorno = False
-
-    return retorno
-
-def mostrar_diccionario(diccionario:dict) -> None:
-    """
-    Muestra en pantalla las claves y valores de un diccionario.
-    Args:
-    diccionario (dict): Diccionario a mostrar.
-    Returns:
-    None
-    """
-
-    for clave in diccionario:
-        print(f"{formatear_clave(clave)} : {diccionario[clave]}")
-
-def mostrar_lista_diccionarios(lista_diccionarios:list) -> None:
-    """
-    Muestra en pantalla las claves y valores de un diccionario.
-    Args:
-    diccionario (dict): Diccionario a mostrar.
-    Returns:
-    None
-    """
-
-    for i in range(len(lista_diccionarios)):
-        mostrar_diccionario(lista_diccionarios[i])
-        print("")
 
 def formatear_clave(clave:str) -> str:
     """
@@ -256,9 +187,9 @@ def cargar_alumno(lista_alumnos: list) -> bool:
         alumno["plan"] = validar_plan()
         alumno["nota_promedio"] = float(validar_numero("Promedio: ", 6, 10))
 
-        
-        lista_alumnos.append(alumno)
-       
+        if confirmar_carga_alumno():
+            lista_alumnos.append(alumno)
+         
     else:
         retorno = False
 

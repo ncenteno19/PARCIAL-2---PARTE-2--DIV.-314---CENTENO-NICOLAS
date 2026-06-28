@@ -1,6 +1,7 @@
 from Funciones import *
 from Inputs import *
 from Prints import *
+from Archivos import *
 
 def mostrar_menu()-> None:
 
@@ -38,7 +39,7 @@ def mostrar_menu()-> None:
 
                 case 2:
                     limpiar_consola()
-                    mostrar_alumnos_nota_menor_a(matriz_notas,7)
+                    mostrar_egresados_por_plan(lista_alumnos)
                     esperar_enter()
                 case 3:
                     limpiar_consola()
@@ -54,8 +55,9 @@ def mostrar_menu()-> None:
                     esperar_enter()
 
                 case 6:
-                    if carga_manual == True:
-                        guardar_csv_matriz(nombre_archivo_csv(),matriz_notas)
+                    # Consultar si se realizo carga manual
+                    # if carga_manual == True:
+                        # guardar_csv_matriz(nombre_archivo_csv(),matriz_notas)
                     print("Hasta luego!! ✌️")
                 case _:
                     print("❌  Opción Inválida. Vuelva a intentarlo")
