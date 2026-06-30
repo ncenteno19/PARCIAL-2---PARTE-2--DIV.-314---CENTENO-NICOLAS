@@ -83,7 +83,6 @@ def sub_menu_carga(lista_alumnos: list)-> bool:
                     limpiar_consola()
                     print("📂  *** CARGA DESDE ARCHIVO JSON*** 📂")
                     cargar_json("alumnos.json",lista_alumnos)
-                    #normalizar_alumnos(lista_alumnos)
                     mostrar_lista_diccionarios(lista_alumnos)
                 
                     carga_manual = False

@@ -37,17 +37,62 @@ def cargar_json(nombre_archivo:str,lista_alumnos:list) -> bool:
         
         lista_json = leer_json(nombre_archivo)
 
-        if lista_json != None:
+        if validar_json(lista_json):
 
             for i in range(len(lista_json)):
                 lista_alumnos.append(lista_json[i])
         else:
+            print("❌ Error en los datos del archivo")
             retorno = False
        
     else:
         retorno = False
 
     return retorno
+
+
+def validar_json(lista_json: list) -> bool:
+
+    """
+    Valida que la estructura de los datos cargados desde un archivo JSON sea correcta.
+    Verifica que el contenido no sea None, que sea una lista y que contenga elementos.
+    Luego recorre cada elemento asegurando que sea un diccionario y que tenga
+    las claves esperadas con los tipos de datos correctos.
+
+    Args:
+    lista_json (list): Datos obtenidos desde el archivo JSON.
+
+    Returns:
+    bool: True si la estructura y los datos son válidos, False en caso contrario.
+    """
+
+    if (
+        lista_json != None and
+        type(lista_json) == list and 
+        len(lista_json) > 0 
+        ):
+        
+        for i in range (len(lista_json)):
+
+            if type(lista_json[i]) != dict:              
+                return False
+
+            if not (
+                type(lista_json[i].get("legajo")) == int and
+                type(lista_json[i].get("nombre")) == str and
+                type(lista_json[i].get("apellido")) == str and
+                type(lista_json[i].get("egreso")) == int and
+                type(lista_json[i].get("plan")) == int and
+                type(lista_json[i].get("nota_promedio")) == float 
+            ):
+                return False
+            
+        return True
+    
+    else:
+        return False
+    
+
 
 def formatear_clave(clave:str) -> str:
     """
